@@ -2,11 +2,15 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDaoJDBCImpl extends Util implements UserDao {
+public class UserDaoJDBCImpl implements UserDao {
     private String createUsersTable = "CREATE TABLE IF NOT EXISTS `users` ("
             + "`id` BIGINT NOT NULL AUTO_INCREMENT,"
             + "`name` VARCHAR(45) NOT NULL,"
@@ -28,7 +32,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
 
     public void createUsersTable() throws SQLException {
         try {
-            connection = getConnection();
+            connection = Util.getInstance().getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(createUsersTable);
             connection.commit();
@@ -47,7 +51,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
 
     public void dropUsersTable() throws SQLException {
         try {
-            connection = getConnection();
+            connection = Util.getInstance().getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(dropUsersTable);
             connection.commit();
@@ -67,7 +71,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) throws SQLException {
         try {
-            connection = getConnection();
+            connection = Util.getInstance().getConnection();
             preparedstatement = connection.prepareStatement(saveUser);
             preparedstatement.setString(1, name);
             preparedstatement.setString(2, lastName);
@@ -90,7 +94,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
 
     public void removeUserById(long id) throws SQLException {
         try {
-            connection = getConnection();
+            connection = Util.getInstance().getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(removeUserById + id);
             connection.commit();
@@ -110,7 +114,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
     public List<User> getAllUsers() throws SQLException {
         List<User> userList = new ArrayList<>();
         try {
-            connection = getConnection();
+            connection = Util.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(getAllUsers);
             while (resultSet.next()) {
@@ -139,7 +143,7 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
 
     public void cleanUsersTable() throws SQLException {
         try {
-            connection = getConnection();
+            connection = Util.getInstance().getConnection();
             statement = connection.createStatement();
             statement.executeUpdate(cleanUsersTable);
             connection.commit();
